@@ -1,0 +1,12 @@
+{
+  "name": "Shelly Global Trade Map",
+  "short_name": "Trade Map",
+  "description": "Shelly 的国家、港口与海运航线地图。",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f8f6",
+  "theme_color": "#174c4a",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
