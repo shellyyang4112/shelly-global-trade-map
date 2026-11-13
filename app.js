@@ -33,6 +33,7 @@ const seaLabels=[
   {name:'地中海',lat:35,lon:18,kind:'sea'},
   {name:'红海',lat:21,lon:39,kind:'sea'},
   {name:'黑海',lat:43,lon:35,kind:'sea'},
+  {name:'里海',lat:41.8,lon:51.1,kind:'sea'},
   {name:'阿拉伯海',lat:16,lon:65,kind:'sea'},
   {name:'南海',lat:15,lon:114,kind:'sea'}
 ];
