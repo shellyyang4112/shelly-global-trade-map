@@ -21,6 +21,25 @@ const priorityLabels=new Set(['China','United States','Canada','Brazil','Argenti
 const labelStyle=document.createElement('style');
 labelStyle.textContent='.country-label{background:transparent;border:0;color:#315b53;font-size:10px;font-weight:650;letter-spacing:.1px;line-height:1.1;pointer-events:none;text-align:center;text-shadow:-1px -1px 2px #f7faf7,1px -1px 2px #f7faf7,-1px 1px 2px #f7faf7,1px 1px 2px #f7faf7;white-space:nowrap}';
 document.head.append(labelStyle);
+const seaLabelLayer=L.layerGroup().addTo(map);
+const seaLabels=[
+  {name:'北太平洋',lat:33,lon:-166,kind:'ocean'},
+  {name:'南太平洋',lat:-28,lon:-137,kind:'ocean'},
+  {name:'北大西洋',lat:34,lon:-43,kind:'ocean'},
+  {name:'南大西洋',lat:-27,lon:-19,kind:'ocean'},
+  {name:'印度洋',lat:-15,lon:76,kind:'ocean'},
+  {name:'北冰洋',lat:76,lon:5,kind:'ocean'},
+  {name:'南大洋',lat:-56,lon:42,kind:'ocean'},
+  {name:'地中海',lat:35,lon:18,kind:'sea'},
+  {name:'红海',lat:21,lon:39,kind:'sea'},
+  {name:'黑海',lat:43,lon:35,kind:'sea'},
+  {name:'阿拉伯海',lat:16,lon:65,kind:'sea'},
+  {name:'南海',lat:15,lon:114,kind:'sea'}
+];
+const seaLabelStyle=document.createElement('style');
+seaLabelStyle.textContent='.sea-label{background:transparent;border:0;color:#34718a;font-style:italic;font-weight:700;letter-spacing:.6px;line-height:1;pointer-events:none;text-align:center;text-shadow:-1px -1px 2px #eaf7fb,1px -1px 2px #eaf7fb,-1px 1px 2px #eaf7fb,1px 1px 2px #eaf7fb;white-space:nowrap}.sea-label.ocean{font-size:12px}.sea-label.sea{font-size:9px}';
+document.head.append(seaLabelStyle);
+for(const sea of seaLabels){L.marker([sea.lat,sea.lon],{interactive:false,keyboard:false,zIndexOffset:-350,icon:L.divIcon({className:`sea-label ${sea.kind}`,html:sea.name,iconSize:null,iconAnchor:[0,0]})}).addTo(seaLabelLayer);}
 function renderCountryLabels(){
   labelLayer.clearLayers();
   const zoom=map.getZoom();
