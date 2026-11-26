@@ -9,13 +9,22 @@ const countries=window.COUNTRIES;const byId=new Map(countries.map(c=>[c.id,c]));
 const selectionCompanions={CHN:['TWN']};
 function selectionIds(id){return [id,...(selectionCompanions[id]||[])];}
 const continentColors={Asia:'#cfe8d0',Europe:'#cfe5f5',Africa:'#f8e5a7','North America':'#e1d8f2','South America':'#f6d7df',Oceania:'#d5e8ee',Antarctic:'#e6eaec',Other:'#e8ece9'};
-function countryStyle(id){return {...base,fillColor:continentColors[byId.get(id)?.continent]||continentColors.Other};}
+const visaFreeCountryNames=new Set(['Albania','United Arab Emirates','Azerbaijan','Antigua and Barbuda','Barbados','Bahamas','Belarus','Bosnia and Herzegovina','Dominica','Fiji','Georgia','Grenada','Kazakhstan','Maldives','Malaysia','Mauritius','Qatar','Samoa','Serbia','Seychelles','Singapore','Suriname','Solomon Islands','Thailand','Tonga','Uzbekistan','Armenia','San Marino','Morocco']);
+const visaFreeMutualText='阿尔巴尼亚、阿联酋、阿塞拜疆、安提瓜和巴布达、巴巴多斯、巴哈马、白俄罗斯、波黑、多米尼克、斐济、格鲁吉亚、格林纳达、哈萨克斯坦、马尔代夫、马来西亚、毛里求斯、卡塔尔、萨摩亚、塞尔维亚、塞舌尔、新加坡、苏里南、所罗门群岛、泰国、汤加、乌兹别克斯坦、亚美尼亚、圣马力诺';
+function countryStyle(id){const c=byId.get(id);return {...base,fillColor:visaFreeCountryNames.has(c?.name)?'#88cfa4':continentColors[c?.continent]||continentColors.Other};}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const continentLegend=document.querySelector('.legend');
-continentLegend.innerHTML='<strong>按洲</strong><span class="legend-key asia"></span>亚洲<span class="legend-key europe"></span>欧洲<span class="legend-key africa"></span>非洲<span class="legend-key na"></span>北美<span class="legend-key sa"></span>南美<span class="legend-key oceania"></span>大洋洲<span class="border-key"></span>国界';
+continentLegend.innerHTML='<strong>按洲</strong><span class="legend-key asia"></span>亚洲<span class="legend-key europe"></span>欧洲<span class="legend-key africa"></span>非洲<span class="legend-key na"></span>北美<span class="legend-key sa"></span>南美<span class="legend-key oceania"></span>大洋洲<span class="border-key"></span>国界<span class="visa-free-key"></span>中国普通护照免签';
 const continentStyle=document.createElement('style');
-continentStyle.textContent='.legend{flex-wrap:wrap;max-width:330px;row-gap:6px}.legend strong{font-size:10px;color:#55766d;margin-right:2px}.legend-key{width:9px!important;height:9px!important;border-radius:2px!important;margin:0!important}.legend-key.asia{background:#cfe8d0}.legend-key.europe{background:#cfe5f5}.legend-key.africa{background:#f8e5a7}.legend-key.na{background:#e1d8f2}.legend-key.sa{background:#f6d7df}.legend-key.oceania{background:#d5e8ee}.border-key{display:inline-block;width:13px;height:0;margin:0 0 0 4px;border-top:2px solid #527a70;vertical-align:3px}';
+continentStyle.textContent='.legend{flex-wrap:wrap;max-width:330px;row-gap:6px}.legend strong{font-size:10px;color:#55766d;margin-right:2px}.legend-key{width:9px!important;height:9px!important;border-radius:2px!important;margin:0!important}.legend-key.asia{background:#cfe8d0}.legend-key.europe{background:#cfe5f5}.legend-key.africa{background:#f8e5a7}.legend-key.na{background:#e1d8f2}.legend-key.sa{background:#f6d7df}.legend-key.oceania{background:#d5e8ee}.border-key{display:inline-block;width:13px;height:0;margin:0 0 0 4px;border-top:2px solid #527a70;vertical-align:3px}.visa-free-key{width:10px!important;height:10px!important;border-radius:2px!important;margin:0 0 0 7px!important;background:#88cfa4}';
 document.head.append(continentStyle);
+const visaFreePanel=document.createElement('section');
+visaFreePanel.className='visa-free-panel';
+visaFreePanel.innerHTML=`<div class="sectiontitle">中国普通护照免签 <span>29 COUNTRIES</span></div><p class="muted">地图中深绿色国家为本版已核实的免签目的地。</p><details><summary>查看免签国家清单</summary><p><strong>互免签证（28国）</strong><br>${visaFreeMutualText}</p><p><strong>单方免签（1国）</strong><br>摩洛哥（最长停留90天）。</p><p class="visa-note">资料基准：外交部领事服务网《中外互免签证协定一览表》（更新至2026年5月29日）及摩洛哥入境居留说明。入境目的、停留天数、护照有效期和边检材料要求可能调整，出行前请再次核实。</p></details>`;
+document.querySelector('#country').after(visaFreePanel);
+const visaFreeStyle=document.createElement('style');
+visaFreeStyle.textContent='.visa-free-panel{border-top:1px solid #dbe8df}.visa-free-panel .muted{margin:9px 0}.visa-free-panel details{margin-top:9px;color:#496861}.visa-free-panel details p{margin:10px 0}.visa-free-panel strong{color:#176048}.visa-note{font-size:10px;color:#778a82;line-height:1.65}';
+document.head.append(visaFreeStyle);
 const labelLayer=L.layerGroup().addTo(map);
 const priorityLabels=new Set(['China','United States','Canada','Brazil','Argentina','Mexico','United Kingdom','France','Germany','Spain','Italy','Russia','Turkey','Saudi Arabia','United Arab Emirates','Oman','India','Japan','South Korea','Indonesia','Australia','South Africa','Egypt','Nigeria','Kenya','Algeria','Morocco','Peru','Chile','Colombia','Thailand','Vietnam','Philippines','Malaysia','Pakistan','Bangladesh','Poland','Netherlands','Belgium','Portugal','Greece','Ukraine']);
 const labelStyle=document.createElement('style');
