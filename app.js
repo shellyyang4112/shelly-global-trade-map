@@ -19,7 +19,7 @@ document.head.append(continentStyle);
 const labelLayer=L.layerGroup().addTo(map);
 const priorityLabels=new Set(['China','United States','Canada','Brazil','Argentina','Mexico','United Kingdom','France','Germany','Spain','Italy','Russia','Turkey','Saudi Arabia','United Arab Emirates','Oman','India','Japan','South Korea','Indonesia','Australia','South Africa','Egypt','Nigeria','Kenya','Algeria','Morocco','Peru','Chile','Colombia','Thailand','Vietnam','Philippines','Malaysia','Pakistan','Bangladesh','Poland','Netherlands','Belgium','Portugal','Greece','Ukraine']);
 const labelStyle=document.createElement('style');
-labelStyle.textContent='.country-label{background:transparent;border:0;color:#315b53;font-size:10px;font-weight:650;letter-spacing:.1px;line-height:1.1;pointer-events:none;text-align:center;text-shadow:-1px -1px 2px #f7faf7,1px -1px 2px #f7faf7,-1px 1px 2px #f7faf7,1px 1px 2px #f7faf7;white-space:nowrap}';
+labelStyle.textContent='.country-label{background:transparent;border:0;color:#315b53;font-size:10px;font-weight:650;letter-spacing:.1px;line-height:1.1;pointer-events:none;text-align:center;text-shadow:-1px -1px 2px #f7faf7,1px -1px 2px #f7faf7,-1px 1px 2px #f7faf7,1px 1px 2px #f7faf7;white-space:nowrap}.africa-country-label{color:#155b4c;font-size:11px;font-weight:800;text-shadow:-1px -1px 2px #f7fff9,1px -1px 2px #f7fff9,-1px 1px 2px #f7fff9,1px 1px 2px #f7fff9}';
 document.head.append(labelStyle);
 const seaLabelLayer=L.layerGroup().addTo(map);
 const seaLabels=[
@@ -44,10 +44,10 @@ for(const sea of seaLabels){L.marker([sea.lat,sea.lon],{interactive:false,keyboa
 function renderCountryLabels(){
   labelLayer.clearLayers();
   const zoom=map.getZoom();
-  const visible=countries.filter(c=>zoom>=4||priorityLabels.has(c.name));
+  const visible=countries.filter(c=>zoom>=4||priorityLabels.has(c.name)||(c.continent==='Africa'&&zoom>=3));
   for(const c of visible){
     if(!c.latlng||!c.name)continue;
-    L.marker(c.latlng,{interactive:false,keyboard:false,zIndexOffset:-400,icon:L.divIcon({className:'country-label',html:esc(c.name),iconSize:null,iconAnchor:[0,0]})}).addTo(labelLayer);
+    L.marker(c.latlng,{interactive:false,keyboard:false,zIndexOffset:-400,icon:L.divIcon({className:c.continent==='Africa'?'country-label africa-country-label':'country-label',html:esc(c.name),iconSize:null,iconAnchor:[0,0]})}).addTo(labelLayer);
   }
 }
 map.on('zoomend moveend',renderCountryLabels);
